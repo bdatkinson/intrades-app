@@ -1,6 +1,11 @@
 import { expect } from 'chai';
 import mongoose from 'mongoose';
-import User, { tradeSpecialties, progressTiers, userRoles } from '../../server/models/User.js';
+import User from '../../server/models/User.js';
+
+// Export these constants from User model or define them here for testing
+const tradeSpecialties = ['electrician', 'plumber', 'hvac', 'carpenter', 'general'];
+const progressTiers = ['apprentice', 'journeyman', 'master', 'contractor', 'boss'];
+const userRoles = ['student', 'instructor', 'admin'];
 
 describe('User Model', function() {
   before(async function() {
