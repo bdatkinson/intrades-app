@@ -130,14 +130,14 @@ Create a `.env` file in your project root:
 
 ```bash
 # AWS S3 Configuration
-AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
-AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+AWS_ACCESS_KEY_ID=your-access-key-id-here
+AWS_SECRET_ACCESS_KEY=your-secret-access-key-here
 AWS_REGION=us-east-1
 S3_BUCKET=intrades-submissions
 
 # Optional: CloudFront CDN (for faster delivery)
-CLOUDFRONT_DOMAIN=d111111abcdef8.cloudfront.net
-CLOUDFRONT_KEY_PAIR_ID=APKAEIBAERJR2EXAMPLE
+CLOUDFRONT_DOMAIN=your-cloudfront-domain.cloudfront.net
+CLOUDFRONT_KEY_PAIR_ID=your-key-pair-id
 CLOUDFRONT_PRIVATE_KEY_PATH=./keys/cloudfront-private-key.pem
 ```
 
