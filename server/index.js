@@ -12,6 +12,9 @@ import authRoutes from './routes/auth.js';
 import challengeRoutes from './routes/challenges.js';
 import userRoutes from './routes/users.js';
 import leaderboardRoutes from './routes/leaderboard.js';
+import badgeRoutes from './routes/badges.js';
+import xpRoutes from './routes/xp.js';
+import uploadRoutes from './routes/uploads.js';
 
 // Load configuration
 nconf.argv()
@@ -72,6 +75,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/challenges', challengeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/badges', badgeRoutes);
+app.use('/api/xp', xpRoutes);
+app.use('/api/uploads', uploadRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

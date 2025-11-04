@@ -8,7 +8,7 @@ describe('Server', function() {
       const res = await request(app)
         .get('/health')
         .expect(200);
-        
+
       expect(res.body).to.have.property('status', 'healthy');
       expect(res.body).to.have.property('timestamp');
       expect(res.body).to.have.property('version');
@@ -20,7 +20,7 @@ describe('Server', function() {
       const res = await request(app)
         .get('/api/challenges')
         .expect(500); // Will fail without database, but route exists
-        
+
       expect(res.body).to.have.property('success', false);
       expect(res.body).to.have.property('error');
     });
@@ -29,7 +29,7 @@ describe('Server', function() {
       const res = await request(app)
         .get('/api/unknown')
         .expect(404);
-        
+
       expect(res.body).to.have.property('error', 'Route not found');
     });
   });
