@@ -1,7 +1,8 @@
 ﻿'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetClose } from '@/components/ui/sheet'
 
 export function LogoMark(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -66,7 +67,6 @@ export function LogoWordmark({ className = '' }: { className?: string }) {
 }
 
 export function Header() {
-  const [open, setOpen] = useState(false)
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--brand-border)] bg-[color:var(--brand-bg)]/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -84,52 +84,44 @@ export function Header() {
           <Link href="/map" className="text-sm text-foreground/80 hover:text-foreground">Map</Link>
           <Link href="/challenges" className="text-sm font-semibold text-foreground px-2 py-1 rounded border border-[var(--brand-border)] hover:text-foreground hover:border-[var(--brand-accent)]">Challenges</Link>
           <Link href="/settings" className="text-sm text-foreground/80 hover:text-foreground">Settings</Link>
-          <a href="/api/auth/signin" className="rounded-full px-3 py-1.5 text-sm font-medium text-black brand-gradient">Log in</a>
+          <Button className="rounded-full px-3 py-1.5 text-sm font-medium text-black">Log in</Button>
         </nav>
 
-        {/* Mobile: menu button */}
-        <button
-          className="sm:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-[var(--brand-border)] text-foreground/80 hover:text-foreground"
-          aria-label="Open menu"
-          onClick={() => setOpen(true)}
-        >
-          {/* hamburger */}
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-
-      {/* Mobile sheet */}
-      {open && (
+        {/* Mobile sheet via Sheet */}
         <div className="sm:hidden">
-          <div className="fixed inset-0 z-40 bg-black/60" onClick={() => setOpen(false)} />
-          <div className="fixed right-0 top-0 z-50 h-full w-72 border-l border-[var(--brand-border)] bg-[color:var(--brand-bg)] p-4 shadow-xl">
-            <div className="mb-4 flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground/70">Menu</span>
-              <button
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-[var(--brand-border)]"
-                aria-label="Close menu"
-                onClick={() => setOpen(false)}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" aria-label="Open menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg>
-              </button>
-            </div>
-            <nav className="grid gap-2" aria-label="Mobile">
-              <Link href="/dashboard" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5" onClick={() => setOpen(false)}>Dashboard</Link>
-              <Link href="/map" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5" onClick={() => setOpen(false)}>Map</Link>
-              <Link href="/challenges" className="rounded px-2 py-2 font-semibold text-foreground hover:bg-white/5 border border-[var(--brand-border)]" onClick={() => setOpen(false)}>Challenges</Link>
-              <Link href="/settings" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5" onClick={() => setOpen(false)}>Settings</Link>
-              <a href="/api/auth/signin" className="mt-2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium text-black brand-gradient" onClick={() => setOpen(false)}>Log in</a>
-            </nav>
-          </div>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+                <SheetClose asChild>
+                  <Button variant="outline" size="icon" aria-label="Close menu">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </Button>
+                </SheetClose>
+              </SheetHeader>
+              <nav className="grid gap-2" aria-label="Mobile">
+                <Link href="/dashboard" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Dashboard</Link>
+                <Link href="/map" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Map</Link>
+                <Link href="/challenges" className="rounded px-2 py-2 font-semibold text-foreground hover:bg-white/5 border border-[var(--brand-border)]">Challenges</Link>
+                <Link href="/settings" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Settings</Link>
+                <Button className="mt-2">Log in</Button>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
-      )}
+      </div>
     </header>
   )
 }
