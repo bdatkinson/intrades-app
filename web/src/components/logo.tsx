@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -84,7 +84,7 @@ export function Header() {
           <Link href="/map" className="text-sm text-foreground/80 hover:text-foreground">Map</Link>
           <Link href="/challenges" className="text-sm font-semibold text-foreground px-2 py-1 rounded border border-[var(--brand-border)] hover:text-foreground hover:border-[var(--brand-accent)]">Challenges</Link>
           <Link href="/settings" className="text-sm text-foreground/80 hover:text-foreground">Settings</Link>
-          <Button className="rounded-full px-3 py-1.5 text-sm font-medium text-black">Log in</Button>
+          <a href="/api/auth/signin" className="rounded-full px-3 py-1.5 text-sm font-medium text-black brand-gradient">Log in</a>
         </nav>
 
         {/* Mobile sheet via Sheet */}
@@ -116,7 +116,7 @@ export function Header() {
                 <Link href="/map" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Map</Link>
                 <Link href="/challenges" className="rounded px-2 py-2 font-semibold text-foreground hover:bg-white/5 border border-[var(--brand-border)]">Challenges</Link>
                 <Link href="/settings" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Settings</Link>
-                <Button className="mt-2">Log in</Button>
+                <a href="/api/auth/signin" className="mt-2 inline-flex rounded-md px-3 py-2 text-sm font-medium text-black brand-gradient">Log in</a>
               </nav>
             </SheetContent>
           </Sheet>
@@ -125,3 +125,4 @@ export function Header() {
     </header>
   )
 }
+
