@@ -1,0 +1,39 @@
+﻿name: Preview E2E
+
+on:
+  pull_request:
+
+jobs:
+  preview-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      deployments: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Vercel Preview Deploy
+        id: vercel
+        if: ${{ secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '' }}
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./web
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+
+      - name: Set preview URL output
+        id: set-url
+        if: ${{ steps.vercel.outputs.preview-url != '' }}
+        run: echo "preview_url=${{ steps.vercel.outputs.preview-url }}" >> $GITHUB_OUTPUT
+
+      - name: Smoke test home
+        if: ${{ steps.set-url.outputs.preview_url != '' }}
+        run: |
+          curl -sSf ${{ steps.set-url.outputs.preview_url }}/ | head -c 2000
+
+      - name: Smoke test auth page
+        if: ${{ steps.set-url.outputs.preview_url != '' }}
+        run: |
+          curl -sSf ${{ steps.set-url.outputs.preview_url }}/api/auth/signin | head -c 2000
