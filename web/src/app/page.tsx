@@ -1,4 +1,5 @@
-import Image from "next/image";
+﻿import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -58,6 +59,13 @@ export default function Home() {
           >
             Documentation
           </a>
+        </div>
+
+        {/* CTA: make Challenges easy to find */}
+        <div className="mt-8 flex w-full items-center justify-center sm:justify-start">
+          <Link href="/challenges" className="rounded-full px-5 py-3 text-sm font-semibold text-black brand-gradient">
+            Explore Challenges
+          </Link>
         </div>
       </main>
     </div>
