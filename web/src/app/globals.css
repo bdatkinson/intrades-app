@@ -1,26 +1,44 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* High-energy brand palette */
+  --brand-bg: #0b0d10;        /* near-black */
+  --brand-fg: #e6f1ff;        /* ice white-blue */
+  --brand-primary: #00e1ff;   /* electric cyan */
+  --brand-accent: #ff6b00;    /* safety orange */
+  --brand-neon: #16f2b3;      /* neon green-teal */
+  --brand-muted: #121826;     /* deep slate */
+  --brand-border: #1f2937;    /* slate border */
+
+  /* Map to generic tokens */
+  --background: var(--brand-bg);
+  --foreground: var(--brand-fg);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand: var(--brand-primary);
+  --color-accent: var(--brand-accent);
+  --color-muted: var(--brand-muted);
+  --color-border: var(--brand-border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #f7fafc;
+    --foreground: #0b0d10;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Utility sugar for gradients used in CTAs */
+.brand-gradient {
+  background-image: linear-gradient(135deg, var(--brand-primary), var(--brand-neon));
 }
