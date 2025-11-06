@@ -14,10 +14,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "InTrades",
-  description: "Skilled trades building the future",
-};
+export { metadata } from "./metadata";
 
 export default function RootLayout({
   children,
@@ -35,3 +32,4 @@ export default function RootLayout({
     </html>
   );
 }
+
