@@ -1,19 +1,51 @@
 ﻿'use client'
 
-import { Suspense } from 'react'
+import { useEffect, useRef } from 'react'
+import { Loader } from '@googlemaps/js-api-loader'
+
+type LoaderCompat = {
+  importLibrary?: (name: 'maps' | string) => Promise<unknown>
+  load?: () => Promise<unknown>
+}
 
 export default function MapPage(){
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    if (!key) return
+
+    const loader = new Loader({ apiKey: key, version: 'weekly' }) as unknown as LoaderCompat
+
+    let cancelled = false
+    const ensureMaps = async () => {
+      if (typeof loader.importLibrary === 'function') {
+        await loader.importLibrary('maps')
+      } else if (typeof loader.load === 'function') {
+        await loader.load()
+      }
+      if (cancelled || !ref.current) return
+      new google.maps.Map(ref.current, {
+        center: { lat: 39.5, lng: -98.35 },
+        zoom: 4,
+        disableDefaultUI: false,
+      })
+    }
+    ensureMaps()
+
+    return () => { cancelled = true }
+  }, [])
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
       <h1 className="text-3xl font-semibold tracking-tight">Map</h1>
       <p className="mt-2 text-foreground/70">Find opportunities and challenges near you.</p>
-      <Suspense fallback={<div className="mt-6 h-72 rounded border border-[var(--brand-border)]" />}> 
-        <div className="mt-6 aspect-[16/9] w-full overflow-hidden rounded border border-[var(--brand-border)] bg-gradient-to-br from-[var(--brand-muted)]/50 to-transparent">
-          <div className="p-4 text-sm text-foreground/70">
-            Map integration coming soon. Set <code className="rounded bg-white/10 px-1">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to enable.
-          </div>
-        </div>
-      </Suspense>
+      <div className="mt-6 aspect-[16/9] w-full overflow-hidden rounded border border-[var(--brand-border)] bg-[color:var(--brand-muted)]/30">
+        <div ref={ref} className="h-full w-full" />
+      </div>
+      {!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY && (
+        <p className="mt-3 text-sm text-foreground/70">Set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to display the map.</p>
+      )}
     </main>
   )
 }
