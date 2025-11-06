@@ -1,0 +1,13 @@
+﻿applications:
+  - name: intrades-app
+    app_type: regular_web
+    oidc_conformant: true
+    callbacks:
+      - https://intrades-app.vercel.app/api/auth/callback/auth0
+      - http://localhost:3000/api/auth/callback/auth0
+    allowed_logout_urls:
+      - https://intrades-app.vercel.app
+      - http://localhost:3000
+    web_origins:
+      - https://intrades-app.vercel.app
+      - http://localhost:3000
