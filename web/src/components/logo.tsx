@@ -11,9 +11,43 @@ export function LogoMark(props: React.SVGProps<SVGSVGElement>) {
           <stop offset="100%" stopColor="var(--brand-neon)" />
         </linearGradient>
       </defs>
-      <circle cx="32" cy="32" r="30" fill="none" stroke="url(#g)" strokeWidth="6" />
-      <path d="M32 14l8 12h-6v14h-4V26h-6l8-12z" fill="url(#g)"/>
-      <circle cx="32" cy="32" r="8" fill="none" stroke="var(--brand-accent)" strokeWidth="3" />
+
+      {/* Outer gear */}
+      <g transform="translate(32 32)">
+        <circle r="22" fill="none" stroke="url(#g)" strokeWidth="6" />
+        {/* Teeth */}
+        {
+          Array.from({ length: 8 }).map((_, i) => (
+            <rect
+              key={i}
+              x="-2.5"
+              y="-30"
+              width="5"
+              height="8"
+              rx="1"
+              fill="url(#g)"
+              transform={`rotate(${i * 45})`}
+            />
+          ))
+        }
+      </g>
+
+      {/* Upward arrow inside */}
+      <path d="M32 18l9 12h-6v16h-6V30h-6l9-12z" fill="url(#g)" />
+
+      {/* Stylized handshake */}
+      <g>
+        {/* left arm */}
+        <path d="M18 36 l8 -6 a4 4 0 0 1 5 0 l5 4 a4 4 0 0 1 1.5 3.1V42h-3.5l-5.5-4.2a3.5 3.5 0 0 0 -4.2 0L20 42h-4v-2.4a4 4 0 0 1 2 -3.6z" fill="#0deac9" opacity="0.85" />
+        {/* right arm */}
+        <path d="M46 36 l-8 -6 a4 4 0 0 0 -5 0 l-5 4 a4 4 0 0 0 -1.5 3.1V42h3.5l5.5-4.2a3.5 3.5 0 0 1 4.2 0L44 42h4v-2.4a4 4 0 0 0 -2 -3.6z" fill="#ff8a33" opacity="0.9" />
+        {/* knuckle accents */}
+        <g stroke="var(--brand-border)" strokeWidth="1.2" strokeLinecap="round">
+          <line x1="28" y1="38" x2="30" y2="38" />
+          <line x1="31" y1="39" x2="33" y2="39" />
+          <line x1="34" y1="38" x2="36" y2="38" />
+        </g>
+      </g>
     </svg>
   )
 }
