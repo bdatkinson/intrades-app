@@ -14,7 +14,7 @@ jobs:
 
       - name: Vercel Preview Deploy
         id: vercel
-        if: ${{ secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -37,3 +37,4 @@ jobs:
         if: ${{ steps.set-url.outputs.preview_url != '' }}
         run: |
           curl -sSf ${{ steps.set-url.outputs.preview_url }}/api/auth/signin | head -c 2000
+
