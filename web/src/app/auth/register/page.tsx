@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth";
 
 const Schema = z.object({
@@ -17,6 +18,7 @@ type FormValues = z.infer<typeof Schema>;
 
 export default function RegisterPage() {
   const { register: registerUser } = useAuth();
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({ resolver: zodResolver(Schema) });
 
@@ -24,6 +26,7 @@ export default function RegisterPage() {
     setError(null);
     try {
       await registerUser(data);
+      router.push('/settings');
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Registration failed';
       setError(msg);

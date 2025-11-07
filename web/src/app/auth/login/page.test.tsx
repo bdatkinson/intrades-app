@@ -2,6 +2,12 @@ import { render, screen } from "@testing-library/react";
 import LoginPage from "./page";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/contexts/auth";
+import { vi } from "vitest";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 function renderWithProviders(ui: React.ReactElement) {
   const qc = new QueryClient();

@@ -12,8 +12,8 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
     headers: { 'Content-Type': 'application/json', ...(init.headers || {}) },
     ...init,
-    // Always send credentials if same-origin APIs are used; adjust if needed
-    credentials: 'include',
+    // Option A: Bearer tokens via Authorization header; do not send cookies
+    credentials: 'omit',
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');

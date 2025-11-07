@@ -7,6 +7,8 @@ import { vi } from "vitest";
 const replaceMock = vi.fn();
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ replace: replaceMock }),
+  usePathname: () => "/secret",
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 function renderWithProviders(ui: React.ReactElement) {
@@ -25,6 +27,8 @@ describe("Protected", () => {
         <div>Secret</div>
       </Protected>
     );
-    expect(replaceMock).toHaveBeenCalledWith("/auth/login");
+    expect(replaceMock).toHaveBeenCalledWith(
+      "/auth/login?next=%2Fsecret"
+    );
   });
 });

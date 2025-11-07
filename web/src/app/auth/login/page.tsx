@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/auth";
 
 const Schema = z.object({
@@ -14,8 +15,10 @@ const Schema = z.object({
 
 type FormValues = z.infer<typeof Schema>;
 
-export default function LoginPage() {
+function LoginInner() {
   const { login } = useAuth();
+  const router = useRouter();
+  const sp = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({ resolver: zodResolver(Schema) });
 
@@ -23,6 +26,8 @@ export default function LoginPage() {
     setError(null);
     try {
       await login(data);
+      const next = sp.get('next');
+      router.push(next || '/dashboard');
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Login failed';
       setError(msg);
@@ -60,5 +65,13 @@ export default function LoginPage() {
         <Link href="/auth/register" className="text-[var(--brand-primary)] hover:underline">Create an account</Link>
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginInner />
+    </Suspense>
   );
 }
