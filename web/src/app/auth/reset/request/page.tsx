@@ -33,8 +33,8 @@ export default function ResetRequestPage() {
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
           <div>
-            <label className="block text-sm mb-1">Email</label>
-            <input type="email" className="w-full rounded border px-3 py-2" {...register('email')} />
+          <label htmlFor="email" className="block text-sm mb-1">Email</label>
+          <input id="email" type="email" className="w-full rounded border px-3 py-2" {...register('email')} />
             {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}

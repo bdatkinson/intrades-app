@@ -36,8 +36,8 @@ function ResetConfirmInner() {
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
           <div>
-            <label className="block text-sm mb-1">New password</label>
-            <input type="password" className="w-full rounded border px-3 py-2" {...register('password')} />
+            <label htmlFor="password" className="block text-sm mb-1">New password</label>
+            <input id="password" type="password" className="w-full rounded border px-3 py-2" {...register('password')} />
             {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
