@@ -1,6 +1,7 @@
-'use client'
+"use client"
 
 import Link from 'next/link'
+import { useAuth } from '@/contexts/auth'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetClose } from '@/components/ui/sheet'
 
@@ -67,6 +68,7 @@ export function LogoWordmark({ className = '' }: { className?: string }) {
 }
 
 export function Header() {
+  const { user, logout } = useAuth();
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--brand-border)] bg-[color:var(--brand-bg)]/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -84,7 +86,15 @@ export function Header() {
           <Link href="/map" className="text-sm text-foreground/80 hover:text-foreground">Map</Link>
           <Link href="/challenges" className="text-sm font-semibold text-foreground px-2 py-1 rounded border border-[var(--brand-border)] hover:text-foreground hover:border-[var(--brand-accent)]">Challenges</Link>
           <Link href="/settings" className="text-sm text-foreground/80 hover:text-foreground">Settings</Link>
-          <a href="/api/auth/signin" className="rounded-full px-3 py-1.5 text-sm font-medium text-black brand-gradient">Log in</a>
+          {user ? (
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-foreground/70">Hi, {user.name?.split(' ')[0] || 'you'}</span>
+              <Link href="/settings" className="text-sm text-foreground/90 hover:text-foreground">Profile</Link>
+              <button onClick={logout} className="rounded-full px-3 py-1.5 text-sm font-medium text-black brand-gradient">Log out</button>
+            </div>
+          ) : (
+            <Link href="/auth/login" className="rounded-full px-3 py-1.5 text-sm font-medium text-black brand-gradient">Log in</Link>
+          )}
         </nav>
 
         {/* Mobile sheet via Sheet */}
@@ -116,7 +126,11 @@ export function Header() {
                 <Link href="/map" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Map</Link>
                 <Link href="/challenges" className="rounded px-2 py-2 font-semibold text-foreground hover:bg-white/5 border border-[var(--brand-border)]">Challenges</Link>
                 <Link href="/settings" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Settings</Link>
-                <a href="/api/auth/signin" className="mt-2 inline-flex rounded-md px-3 py-2 text-sm font-medium text-black brand-gradient">Log in</a>
+                {user ? (
+                  <button onClick={logout} className="mt-2 inline-flex rounded-md px-3 py-2 text-sm font-medium text-black brand-gradient">Log out</button>
+                ) : (
+                  <Link href="/auth/login" className="mt-2 inline-flex rounded-md px-3 py-2 text-sm font-medium text-black brand-gradient">Log in</Link>
+                )}
               </nav>
             </SheetContent>
           </Sheet>
