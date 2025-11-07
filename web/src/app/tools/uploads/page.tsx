@@ -14,6 +14,7 @@ export default function UploadsDemoPage() {
       <div className="mt-6">
         <Uploader
           accept="image/*,application/pdf"
+          uploadMode="proxy"
           destKeyBuilder={(file) => `users/demo/challenges/demo/${Date.now()}-${file.name}`}
           onUploaded={(r) => setLast(r)}
         />

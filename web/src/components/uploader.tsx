@@ -6,9 +6,10 @@ type Props = {
   destKeyBuilder: (file: File) => string
   accept?: string
   onUploaded?: (args: { key: string; url: string }) => void
+  uploadMode?: 'presigned' | 'proxy'
 }
 
-export function Uploader({ destKeyBuilder, accept, onUploaded }: Props) {
+export function Uploader({ destKeyBuilder, accept, onUploaded, uploadMode = 'presigned' }: Props) {
   const [progress, setProgress] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const abortRef = useRef<AbortController | null>(null)
@@ -17,8 +18,37 @@ export function Uploader({ destKeyBuilder, accept, onUploaded }: Props) {
     setError(null)
     setProgress(0)
 
-    // 1) request presigned PUT
     const key = destKeyBuilder(file)
+
+    if (uploadMode === 'proxy') {
+      // Directly POST to our API to avoid S3 CORS
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', `/api/uploads/put?key=${encodeURIComponent(key)}&contentType=${encodeURIComponent(file.type || 'application/octet-stream')}`)
+        if (file.type) xhr.setRequestHeader('Content-Type', file.type)
+        xhr.upload.onprogress = (e) => {
+          if (!e.lengthComputable) return
+          setProgress(Math.round((e.loaded / e.total) * 100))
+        }
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) resolve()
+          else reject(new Error(`Upload failed (${xhr.status})`))
+        }
+        xhr.onerror = () => reject(new Error('Network error during upload'))
+        xhr.onabort = () => reject(new Error('Upload aborted'))
+        xhr.send(file)
+      }).catch((e) => {
+        setError(e instanceof Error ? e.message : 'Upload failed')
+        setProgress(null)
+        throw e
+      })
+      // No GET URL generation here (no CORS issues on GET generally, but we can still presign if needed)
+      setProgress(100)
+      onUploaded?.({ key, url: '' })
+      return
+    }
+
+    // Default: presigned PUT flow
     const signResp = await fetch('/api/uploads/sign', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -31,7 +61,6 @@ export function Uploader({ destKeyBuilder, accept, onUploaded }: Props) {
     }
     const { url } = (await signResp.json()) as { url: string }
 
-    // 2) upload via XHR to get progress events
     await new Promise<void>((resolve, reject) => {
       const xhr = new XMLHttpRequest()
       abortRef.current = new AbortController()
@@ -54,7 +83,6 @@ export function Uploader({ destKeyBuilder, accept, onUploaded }: Props) {
       throw e
     })
 
-    // 3) optional: return GET url for immediate preview
     const getResp = await fetch('/api/uploads/sign', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -63,7 +91,7 @@ export function Uploader({ destKeyBuilder, accept, onUploaded }: Props) {
     const data = getResp.ok ? ((await getResp.json()) as { url: string }) : { url: '' }
     setProgress(100)
     onUploaded?.({ key, url: data.url })
-  }, [destKeyBuilder, onUploaded])
+  }, [destKeyBuilder, onUploaded, uploadMode])
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     const f = e.target.files?.[0]
