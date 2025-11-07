@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useMemo, Suspense } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { CHALLENGES, type Trade, type Difficulty } from '@/data/challenges'
+import { CHALLENGES, type Trade, type Difficulty, type Week } from '@/data/challenges'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
@@ -12,6 +12,8 @@ const TRADES: Trade[] = ['Electrical', 'Plumbing', 'Carpentry', 'HVAC', 'Welding
 
 type DifficultyFilter = Difficulty | 'All'
 const DIFFICULTY: Difficulty[] = ['Easy', 'Medium', 'Hard']
+type WeekFilter = Week | 'All'
+const WEEKS: Week[] = [1, 2, 3, 4, 5, 6, 7, 8]
 
 export default function ChallengesPage() {
   return (
@@ -28,12 +30,16 @@ function ChallengesInner() {
 
   const trade: TradeFilter = (search.get('trade') as Trade | null) || 'All'
   const diff: DifficultyFilter = (search.get('difficulty') as Difficulty | null) || 'All'
+  const wkParam = search.get('week')
+  const wk: WeekFilter = wkParam ? (Number(wkParam) as Week) : 'All'
 
   const items = useMemo(() => {
+    const weekValue: number | null = wk === 'All' ? null : wk
     return CHALLENGES
       .filter((c) => (trade !== 'All' ? c.trade === trade : true))
       .filter((c) => (diff !== 'All' ? c.difficulty === diff : true))
-  }, [trade, diff])
+      .filter((c) => (weekValue !== null ? c.week === weekValue : true))
+  }, [trade, diff, wk])
 
   function setParam(key: string, value: string) {
     const sp = new URLSearchParams(search.toString())
@@ -84,6 +90,21 @@ function ChallengesInner() {
             ))}
           </select>
         </label>
+        <label className="text-sm text-foreground/80">
+          Week
+          <select
+            value={wk === 'All' ? '' : String(wk)}
+            onChange={(e) => setParam('week', e.target.value)}
+            className="ml-2 rounded-md border border-[var(--brand-border)] bg-transparent px-2 py-1 text-sm text-foreground"
+          >
+            <option value="" className="text-black">All</option>
+            {WEEKS.map((w) => (
+              <option key={w} value={w} className="text-black">
+                Week {w}
+              </option>
+            ))}
+          </select>
+        </label>
         <Button variant="ghost" onClick={() => router.push(pathname)} className="sm:ml-2">
           Reset
         </Button>
@@ -94,7 +115,9 @@ function ChallengesInner() {
           <Card key={c.id}>
             <CardHeader>
               <CardTitle>{c.title}</CardTitle>
-              <span className="rounded-md border border-[var(--brand-border)] px-2 py-0.5 text-xs text-foreground/80">{c.trade} • {c.difficulty}</span>
+              <span className="rounded-md border border-[var(--brand-border)] px-2 py-0.5 text-xs text-foreground/80">
+                {c.trade} • {c.difficulty} {typeof c.week !== 'undefined' ? <>• Week {c.week}</> : null} {c.type ? <>• {c.type}</> : null} {c.xp ? <>• {c.xp} XP</> : null}
+              </span>
             </CardHeader>
             <CardContent>
               <p>{c.summary}</p>
