@@ -1,5 +1,8 @@
-﻿import Link from 'next/link'
+﻿"use client";
+
+import Link from 'next/link'
 import { CHALLENGES } from '@/data/challenges'
+import StudentSubmit from '@/components/student-submit'
 
 export default function ChallengeDetail({ params }: { params: { id: string } }) {
   const id = Number(params.id)
@@ -27,6 +30,8 @@ export default function ChallengeDetail({ params }: { params: { id: string } }) 
         <h2 className="text-lg font-medium">Overview</h2>
         <p className="text-sm text-foreground/70">This is a placeholder detail page. In Sprint 3/4 we can add steps, tools, safety notes, and media.</p>
       </section>
+
+      <StudentSubmit challengeId={id} />
 
       <div className="mt-8">
         <Link href="/challenges" className="rounded-md px-3 py-2 text-sm font-medium text-black brand-gradient">Browse more challenges</Link>
