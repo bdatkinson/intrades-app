@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { signPutUrl, signGetUrl } from '@/lib/s3/signer'
+import { signCloudFrontUrl } from '@/lib/cdn/cloudfront'
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,8 +21,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ url })
     }
     if (method === 'GET') {
-      const url = await signGetUrl({ key })
-      return NextResponse.json({ url })
+      // Prefer CloudFront signed URL when configured; fallback to S3 presign
+      try {
+        const url = signCloudFrontUrl({ resourcePath: key })
+        return NextResponse.json({ url })
+      } catch {
+        const url = await signGetUrl({ key })
+        return NextResponse.json({ url })
+      }
     }
     return NextResponse.json({ error: 'Unsupported method' }, { status: 400 })
   } catch (e: unknown) {

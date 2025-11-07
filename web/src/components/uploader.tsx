@@ -42,9 +42,15 @@ export function Uploader({ destKeyBuilder, accept, onUploaded, uploadMode = 'pre
         setProgress(null)
         throw e
       })
-      // No GET URL generation here (no CORS issues on GET generally, but we can still presign if needed)
+      // Fetch signed GET (CloudFront if configured)
+      const getResp = await fetch('/api/uploads/sign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ method: 'GET', key }),
+      })
+      const data = getResp.ok ? ((await getResp.json()) as { url: string }) : { url: '' }
       setProgress(100)
-      onUploaded?.({ key, url: '' })
+      onUploaded?.({ key, url: data.url })
       return
     }
 
