@@ -84,6 +84,7 @@ export function Header() {
         <nav aria-label="Main" className="hidden items-center gap-4 sm:flex">
           <Link href="/dashboard" className="text-sm text-foreground/80 hover:text-foreground">Dashboard</Link>
           <Link href="/map" className="text-sm text-foreground/80 hover:text-foreground">Map</Link>
+          <Link href="/tools/calculators" className="text-sm text-foreground/80 hover:text-foreground">Calculators</Link>
           <Link href="/challenges" className="text-sm font-semibold text-foreground px-2 py-1 rounded border border-[var(--brand-border)] hover:text-foreground hover:border-[var(--brand-accent)]">Challenges</Link>
           <Link href="/settings" className="text-sm text-foreground/80 hover:text-foreground">Settings</Link>
           {user ? (
@@ -124,6 +125,7 @@ export function Header() {
               <nav className="grid gap-2" aria-label="Mobile">
                 <Link href="/dashboard" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Dashboard</Link>
                 <Link href="/map" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Map</Link>
+                <Link href="/tools/calculators" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Calculators</Link>
                 <Link href="/challenges" className="rounded px-2 py-2 font-semibold text-foreground hover:bg-white/5 border border-[var(--brand-border)]">Challenges</Link>
                 <Link href="/settings" className="rounded px-2 py-2 text-foreground/90 hover:bg-white/5">Settings</Link>
                 {user ? (
