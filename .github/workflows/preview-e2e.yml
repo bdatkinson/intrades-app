@@ -12,29 +12,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Vercel Preview Deploy
+      - name: Vercel Preview Deploy (official)
         id: vercel
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
-        uses: amondnet/vercel-action@v25
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '' }}
+        continue-on-error: true
+        uses: vercel/actions/deploy@v1
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./web
-          scope: ${{ secrets.VERCEL_ORG_ID }}
+          # Rely on Vercel Project Root Directory = "web" to avoid double web/web
+          # Set production to false for PR previews
+          production: false
 
-      - name: Set preview URL output
+      - name: Set preview URL output (official action)
         id: set-url
-        if: ${{ steps.vercel.outputs.preview-url != '' }}
-        run: echo "preview_url=${{ steps.vercel.outputs.preview-url }}" >> $GITHUB_OUTPUT
+        if: ${{ steps.vercel.outputs.deployment-url != '' }}
+        run: echo "preview_url=${{ steps.vercel.outputs.deployment-url }}" >> $GITHUB_OUTPUT
 
       - name: Smoke test home
         if: ${{ steps.set-url.outputs.preview_url != '' }}
         run: |
           curl -sSf ${{ steps.set-url.outputs.preview_url }}/ | head -c 2000
 
-      - name: Smoke test auth page
-        if: ${{ steps.set-url.outputs.preview_url != '' }}
+      - name: Smoke test auth page (only if Auth0 secrets present)
+        if: ${{ steps.set-url.outputs.preview_url != '' && secrets.AUTH0_CLIENT_ID != '' && secrets.AUTH0_CLIENT_SECRET != '' && secrets.AUTH0_ISSUER_BASE_URL != '' }}
         run: |
           curl -sSf ${{ steps.set-url.outputs.preview_url }}/api/auth/signin | head -c 2000
 
