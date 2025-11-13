@@ -12,21 +12,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Vercel Preview Deploy
+      - name: Vercel Preview Deploy (official)
         id: vercel
         if: ${{ github.event.pull_request.head.repo.full_name == github.repository && secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '' }}
         continue-on-error: true
-        uses: amondnet/vercel-action@v25
+        uses: vercel/actions/deploy@v1
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          scope: ${{ secrets.VERCEL_ORG_ID }}
+          # Rely on Vercel Project Root Directory = "web" to avoid double web/web
+          # Set production to false for PR previews
+          production: false
 
-      - name: Set preview URL output
+      - name: Set preview URL output (official action)
         id: set-url
-        if: ${{ steps.vercel.outputs.preview-url != '' }}
-        run: echo "preview_url=${{ steps.vercel.outputs.preview-url }}" >> $GITHUB_OUTPUT
+        if: ${{ steps.vercel.outputs.deployment-url != '' }}
+        run: echo "preview_url=${{ steps.vercel.outputs.deployment-url }}" >> $GITHUB_OUTPUT
 
       - name: Smoke test home
         if: ${{ steps.set-url.outputs.preview_url != '' }}
