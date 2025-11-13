@@ -1,5 +1,7 @@
 # 🎨 InTrades Frontend Development Plan
 
+> Plan update (CDN): CloudFront distribution `d2mhpzh11d0f5l.cloudfront.net` has been created in us-east-1 and wired to S3 via OAC and a Trusted Key Group. Signed GETs are enabled in the app when `CLOUDFRONT_DOMAIN`, `CLOUDFRONT_KEY_PAIR_ID`, and `CLOUDFRONT_PRIVATE_KEY` are present.
+
 ## 📋 Executive Summary
 
 This document outlines the comprehensive plan for building the InTrades frontend application, integrating with the completed backend API, and deploying the full-stack application to production.
