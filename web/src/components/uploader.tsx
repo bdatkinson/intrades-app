@@ -73,7 +73,7 @@ export default function Uploader({ accept, challengeId = 0, uploadMode = 'proxy'
   return (
     <div className="rounded-lg border border-[var(--brand-border)] p-4">
       <div className="text-sm text-foreground/80">Submit your work</div>
-      <input type="file" accept={accept} onChange={handleFile} className="mt-3 block text-sm" />
+      <input aria-label="Upload file" type="file" accept={accept} onChange={handleFile} className="mt-3 block text-sm" />
       {status === 'uploading' && <div className="mt-2 text-sm text-foreground/70">Uploading…</div>}
       {status === 'error' && <div className="mt-2 text-sm text-red-500">{error}</div>}
       {status === 'done' && previewUrl && (

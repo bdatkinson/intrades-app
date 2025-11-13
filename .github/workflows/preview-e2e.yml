@@ -33,8 +33,8 @@ jobs:
         run: |
           curl -sSf ${{ steps.set-url.outputs.preview_url }}/ | head -c 2000
 
-      - name: Smoke test auth page
-        if: ${{ steps.set-url.outputs.preview_url != '' }}
+      - name: Smoke test auth page (only if Auth0 secrets present)
+        if: ${{ steps.set-url.outputs.preview_url != '' && secrets.AUTH0_CLIENT_ID != '' && secrets.AUTH0_CLIENT_SECRET != '' && secrets.AUTH0_ISSUER_BASE_URL != '' }}
         run: |
           curl -sSf ${{ steps.set-url.outputs.preview_url }}/api/auth/signin | head -c 2000
 
