@@ -19,6 +19,7 @@ In flight / Monitoring
 
 - [ ] Monitor Vercel preview deploys to confirm no more "Root Directory 'web' does not exist" errors
 - [ ] Keep CI green: lint, tests, build on all PRs
+- [ ] Verify only the official GitHub Action triggers Vercel preview (GitHub Integration disabled)
 
 Sprint 4: Testing + Quality
 
