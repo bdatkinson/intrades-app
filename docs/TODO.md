@@ -6,6 +6,7 @@ Status as of today
 - [x] Brand + header/nav + challenges list/detail with filters (Sprint 1-2)
 - [x] Sprint 3 scaffolds: Dashboard, Map, Settings
 - [x] CI: Lint/Test/Build + Preview workflows (fixed fork-secrets condition)
+- [x] CDN: CloudFront in front of S3 (OAC + Trusted Key Group)
 - [ ] Merge Sprint 3 enhancements (Dashboard widgets, Google Maps) once CI is green on PR #5
 
 Next up (Sprint 3 wrap-up)
