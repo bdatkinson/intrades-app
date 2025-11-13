@@ -15,6 +15,7 @@ jobs:
       - name: Vercel Preview Deploy
         id: vercel
         if: ${{ github.event.pull_request.head.repo.full_name == github.repository && secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '' }}
+        continue-on-error: true
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
