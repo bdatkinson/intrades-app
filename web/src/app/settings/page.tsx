@@ -3,12 +3,30 @@
 import { useState } from 'react'
 
 export default function SettingsPage(){
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [notify, setNotify] = useState(true)
+  const init = (() => {
+    if (typeof window === 'undefined') return { name: '', email: '', notify: true }
+    try {
+      const raw = localStorage.getItem('settings')
+      if (!raw) return { name: '', email: '', notify: true }
+      const s = JSON.parse(raw)
+      return { name: s.name ?? '', email: s.email ?? '', notify: typeof s.notify === 'boolean' ? s.notify : true }
+    } catch { return { name: '', email: '', notify: true } }
+  })()
+  const [name, setName] = useState<string>(init.name)
+  const [email, setEmail] = useState<string>(init.email)
+  const [notify, setNotify] = useState<boolean>(init.notify)
+  const [saved, setSaved] = useState<null | 'ok' | 'err'>(null)
 
   function onSubmit(e: React.FormEvent){
     e.preventDefault()
+    try {
+      localStorage.setItem('settings', JSON.stringify({ name, email, notify }))
+      setSaved('ok')
+      setTimeout(() => setSaved(null), 1500)
+    } catch {
+      setSaved('err')
+      setTimeout(() => setSaved(null), 2000)
+    }
   }
 
   return (
@@ -31,6 +49,8 @@ export default function SettingsPage(){
         </label>
         <div>
           <button type="submit" className="inline-flex rounded-md px-3 py-1.5 text-sm font-medium text-black brand-gradient">Save changes</button>
+          {saved === 'ok' && <span className="ml-3 text-sm text-foreground/70">Saved</span>}
+          {saved === 'err' && <span className="ml-3 text-sm text-red-500">Could not save</span>}
         </div>
       </form>
     </main>
