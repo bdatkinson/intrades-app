@@ -8,4 +8,11 @@ describe("Home", () => {
       screen.getByText(/To get started, edit the page\.tsx file\./i)
     ).toBeInTheDocument();
   });
+
+  it("links to Explore Challenges", () => {
+    render(<Home />);
+    expect(
+      screen.getByRole("link", { name: /explore challenges/i })
+    ).toHaveAttribute("href", "/challenges");
+  });
 });
