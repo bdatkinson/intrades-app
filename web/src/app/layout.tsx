@@ -25,8 +25,19 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
+          {/* Skip to content link for keyboard users */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:text-black"
+          >
+            Skip to main content
+          </a>
+
           <Header />
-          {children}
+
+          <main id="main-content" role="main" className="min-h-screen">
+            {children}
+          </main>
         </Providers>
       </body>
     </html>
