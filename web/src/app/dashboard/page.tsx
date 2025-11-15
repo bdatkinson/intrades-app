@@ -13,30 +13,23 @@ import { useProfile, useUserProgression, useBadges, useUserBadges, useActivityFe
 import type { Badge } from "@/lib/api";
 
 export default function DashboardPage() {
-  const [userId, setUserId] = useState<string | null>(null);
   const { notifications, dismissNotification, showBadgeEarned, showTierUp, showXPGain } = useAchievementNotifications();
   const { animations, triggerAnimation, XPGainAnimations } = useXPGainAnimation();
 
   // Get user profile to get userId
   const { data: profile } = useProfile();
 
-  useEffect(() => {
-    if (profile?.id) {
-      setUserId(profile.id);
-    }
-  }, [profile]);
-
   // Get user progression
-  const { data: progression, isLoading: progressionLoading } = useUserProgression(userId);
+  const { data: progression, isLoading: progressionLoading } = useUserProgression(profile?.id ?? null);
 
   // Get all badges
   const { data: allBadges, isLoading: badgesLoading } = useBadges();
 
   // Get user badges
-  const { data: userBadges, isLoading: userBadgesLoading } = useUserBadges(userId);
+  const { data: userBadges, isLoading: userBadgesLoading } = useUserBadges(profile?.id ?? null);
 
   // Get activity feed
-  const { data: activities = [], isLoading: activitiesLoading } = useActivityFeed(userId, 5);
+  const { data: activities = [], isLoading: activitiesLoading } = useActivityFeed(profile?.id ?? null, 5);
 
   // Monitor for achievements and trigger notifications
   useEffect(() => {

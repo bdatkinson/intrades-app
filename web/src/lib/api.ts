@@ -127,7 +127,7 @@ export type InstructorNotification = {
   timestamp: string;
   read: boolean;
   actionUrl?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 };
 
 // Activity Types
@@ -139,7 +139,7 @@ export type ActivityItem = {
   icon: string;
   timestamp: string;
   xpGained?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 };
 
 // Business Milestone Types
@@ -160,9 +160,18 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const tokens = storage.tokens;
-  const headers: HeadersInit = {
+  // Normalize headers to a mutable record
+  const normalizedInitHeaders = (() => {
+    const h = init.headers as HeadersInit | undefined;
+    if (!h) return {} as Record<string, string>;
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Array.isArray(h)) return Object.fromEntries(h as [string, string][]);
+    return h as Record<string, string>;
+  })();
+
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...(init.headers || {}),
+    ...normalizedInitHeaders,
   };
 
   // Add auth token if available
@@ -298,7 +307,7 @@ export const api = {
       body: JSON.stringify({ grade, feedback, rubricScores }),
     }),
   getChallengeAnalytics: (challengeId: string) =>
-    request<any>(`/api/challenges/${challengeId}/analytics`),
+    request<unknown>(`/api/challenges/${challengeId}/analytics`),
 
   // Instructor
   getStudents: (filters?: { cohortId?: string; tier?: string; search?: string }) => {

@@ -5,14 +5,14 @@ import { useChallenge, useSubmitChallenge } from '@/lib/api-hooks'
 import { ChallengeDetailCard } from '@/components/challenge-detail-card'
 import { TaskSubmissionForm } from '@/components/task-submission-form'
 import { ChallengeProgressTracker } from '@/components/challenge-progress-tracker'
-import { useProfile } from '@/lib/api-hooks'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import type { SubmissionData } from '@/lib/api'
+import type { Trade } from '@/data/challenges'
 
 export default function ChallengeDetail({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { data: challenge, isLoading, error } = useChallenge(params.id);
-  const { data: profile } = useProfile();
   const submitChallenge = useSubmitChallenge();
   const [submissionStatus, setSubmissionStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
@@ -57,7 +57,7 @@ export default function ChallengeDetail({ params }: { params: { id: string } }) 
     { id: "4", title: "Submit Work", description: "Upload photos and submit", completed: false, estimatedTime: "5 min" },
   ];
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: SubmissionData) => {
     setSubmissionStatus("submitting");
     try {
       await submitChallenge.mutateAsync({
@@ -78,10 +78,10 @@ export default function ChallengeDetail({ params }: { params: { id: string } }) 
     <main className="mx-auto max-w-4xl px-4 py-10 space-y-6">
       <ChallengeDetailCard
         challenge={{
-          id: challenge.id,
+          id: Number(challenge.id),
           title: challenge.title,
           summary: challenge.summary || challenge.description,
-          trade: challenge.trade as any,
+          trade: challenge.trade as Trade,
           difficulty: challenge.difficulty,
           submission: challenge.submissionType === 'upload' ? { type: 'upload', accept: challenge.submissionAccept } : undefined,
         }}

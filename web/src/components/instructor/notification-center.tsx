@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type NotificationType = "submission" | "grading" | "system" | "student" | "cohort";
 
@@ -12,7 +12,7 @@ export type InstructorNotification = {
   timestamp: string;
   read: boolean;
   actionUrl?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 };
 
 type NotificationCenterProps = {
@@ -53,8 +53,14 @@ export function NotificationCenter({
     (n) => filter === "all" || n.type === filter
   );
 
+  const [now, setNow] = useState<number>(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
   const formatTimeAgo = (date: Date): string => {
-    const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+    const seconds = Math.floor((now - date.getTime()) / 1000);
     if (seconds < 60) return "just now";
     const minutes = Math.floor(seconds / 60);
     if (minutes < 60) return `${minutes}m ago`;

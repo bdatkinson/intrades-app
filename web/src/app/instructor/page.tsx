@@ -37,10 +37,10 @@ export default function InstructorDashboardPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "students" | "cohorts" | "notifications">(
     "overview"
   );
-  const [studentFilters, setStudentFilters] = useState<{ cohortId?: string; tier?: string; search?: string }>({});
+  // Filters can be added later; currently unused to avoid lint warnings
 
   // API calls
-  const { data: students = [], isLoading: studentsLoading } = useStudents(studentFilters);
+  const { data: students = [], isLoading: studentsLoading } = useStudents();
   const { data: cohorts = [], isLoading: cohortsLoading } = useCohorts();
   const { data: notifications = [], isLoading: notificationsLoading } = useNotifications();
   const markRead = useMarkNotificationRead();
@@ -102,15 +102,17 @@ export default function InstructorDashboardPage() {
 
       {/* Tabs */}
       <div className="mb-6 flex gap-2 border-b border-gray-200 dark:border-gray-700">
-        {[
-          { id: "overview", label: "Overview" },
-          { id: "students", label: "Students" },
-          { id: "cohorts", label: "Cohorts" },
-          { id: "notifications", label: "Notifications" },
-        ].map((tab) => (
+        {(
+          [
+            { id: "overview", label: "Overview" },
+            { id: "students", label: "Students" },
+            { id: "cohorts", label: "Cohorts" },
+            { id: "notifications", label: "Notifications" },
+          ] as Array<{ id: "overview" | "students" | "cohorts" | "notifications"; label: string }>
+        ).map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 font-medium transition-colors ${
               activeTab === tab.id
                 ? "border-b-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"

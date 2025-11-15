@@ -13,8 +13,8 @@ const nextConfig = {
   // Compression
   compress: true,
 
-  // Production optimizations
-  swcMinify: true,
+  // Turbopack configuration (Next.js 16)
+  turbopack: {},
 
   // Experimental features for better performance
   experimental: {
@@ -24,47 +24,7 @@ const nextConfig = {
     ],
   },
 
-  // Webpack optimizations
-  webpack: (config, { isServer }) => {
-    // Optimize bundle size
-    if (!isServer) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            default: false,
-            vendors: false,
-            // Vendor chunk
-            vendor: {
-              name: 'vendor',
-              chunks: 'all',
-              test: /node_modules/,
-              priority: 20,
-            },
-            // Common chunk
-            common: {
-              name: 'common',
-              minChunks: 2,
-              chunks: 'all',
-              priority: 10,
-              reuseExistingChunk: true,
-              enforce: true,
-            },
-            // React and React DOM
-            react: {
-              name: 'react',
-              test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-              chunks: 'all',
-              priority: 30,
-            },
-          },
-        },
-      };
-    }
-
-    return config;
-  },
+  // Remove legacy Webpack overrides; using Turbopack by default
 
   // Headers for security and performance
   async headers() {
@@ -94,5 +54,5 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
 

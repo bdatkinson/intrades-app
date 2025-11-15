@@ -33,7 +33,7 @@ export type ActivityItem = {
   icon: string;
   timestamp: string;
   xpGained?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 };
 
 type ActivityFeedProps = {

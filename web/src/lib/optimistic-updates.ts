@@ -1,6 +1,6 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, QueryClient } from "@tanstack/react-query";
 import type { Challenge, UserProgression, Badge, ChallengeSubmission } from "./api";
 
 /**
@@ -68,8 +68,7 @@ export function useOptimisticUpdates() {
 /**
  * Rollback function for optimistic updates
  */
-export function rollbackOptimisticUpdate(queryKey: string[], previousData: any) {
-  const queryClient = useQueryClient();
+export function rollbackOptimisticUpdate(queryClient: QueryClient, queryKey: string[], previousData: unknown) {
   queryClient.setQueryData(queryKey, previousData);
 }
 

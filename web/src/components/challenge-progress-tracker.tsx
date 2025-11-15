@@ -37,7 +37,6 @@ export function ChallengeProgressTracker({
 
   useEffect(() => {
     if (!animated) {
-      setDisplayProgress(calculateProgress());
       return;
     }
 
@@ -64,7 +63,7 @@ export function ChallengeProgressTracker({
     if (targetProgress !== startProgress) {
       requestAnimationFrame(animate);
     }
-  }, [completedSteps, animated]);
+  }, [completedSteps, animated, calculateProgress, displayProgress]);
 
   const handleStepClick = (step: ChallengeStep) => {
     if (step.completed) return;
@@ -202,7 +201,7 @@ export function ChallengeProgressTracker({
             All Steps Complete!
           </h3>
           <p className="mt-2 text-sm text-green-600 dark:text-green-400">
-            Great work! You've completed all the steps for this challenge.
+            Great work! You&#39;ve completed all the steps for this challenge.
           </p>
         </div>
       )}

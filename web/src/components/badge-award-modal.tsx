@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Badge } from "@/lib/api";
 
 type BadgeAwardModalProps = {
@@ -25,11 +25,23 @@ const CATEGORY_ICONS: Record<string, string> = {
 export function BadgeAwardModal({ badge, isOpen, onClose, xpGained }: BadgeAwardModalProps) {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [confetti, setConfetti] = useState<Array<{ left: string; top: string; delay: string; duration: string; glyph: string }>>([]);
 
   useEffect(() => {
     if (isOpen) {
       setIsAnimating(true);
       setShowConfetti(true);
+      // Generate confetti once on open to avoid impure calls during render
+      const items = Array.from({ length: 50 }).map(() => {
+        const left = `${Math.random() * 100}%`;
+        const top = `${Math.random() * 100}%`;
+        const delay = `${Math.random() * 2}s`;
+        const duration = `${1 + Math.random()}s`;
+        const glyphs = ["🎉", "⭐", "✨", "🎊", "🏆"];
+        const glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
+        return { left, top, delay, duration, glyph };
+      });
+      setConfetti(items);
       
       // Hide confetti after animation
       const confettiTimer = setTimeout(() => setShowConfetti(false), 3000);
@@ -55,20 +67,13 @@ export function BadgeAwardModal({ badge, isOpen, onClose, xpGained }: BadgeAward
         {/* Confetti Effect */}
         {showConfetti && (
           <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
-            {[...Array(50)].map((_, i) => (
+            {confetti.map((c, i) => (
               <div
                 key={i}
                 className="absolute h-3 w-3 animate-ping"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 2}s`,
-                  animationDuration: `${1 + Math.random()}s`,
-                }}
+                style={{ left: c.left, top: c.top, animationDelay: c.delay, animationDuration: c.duration }}
               >
-                <span className="text-2xl">
-                  {["🎉", "⭐", "✨", "🎊", "🏆"][Math.floor(Math.random() * 5)]}
-                </span>
+                <span className="text-2xl">{c.glyph}</span>
               </div>
             ))}
           </div>

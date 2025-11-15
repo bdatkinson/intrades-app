@@ -25,14 +25,16 @@ export function createLazyComponent<T extends ComponentType<any>>(
   fallback?: React.ReactNode
 ) {
   const LazyComponent = lazy(importFunc);
-  
-  return (props: React.ComponentProps<T>) => (
+
+  const Wrapped = (props: React.ComponentProps<T>) => (
     <Suspense fallback={fallback || <LoadingFallback />}>
       <LazyErrorBoundary>
         <LazyComponent {...props} />
       </LazyErrorBoundary>
     </Suspense>
   );
+  Wrapped.displayName = "LazyLoaded";
+  return Wrapped;
 }
 
 // Preload helper for critical routes

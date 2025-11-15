@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Badge } from "@/lib/api";
 
 export type AchievementType = "badge" | "tier" | "streak" | "xp" | "milestone";
@@ -46,6 +46,13 @@ export function AchievementNotification({
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
+  const handleDismiss = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      onDismiss(notification.id);
+    }, 300);
+  }, [notification.id, onDismiss]);
+
   useEffect(() => {
     // Trigger entrance animation
     setIsVisible(true);
@@ -57,14 +64,7 @@ export function AchievementNotification({
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [notification.duration]);
-
-  const handleDismiss = () => {
-    setIsExiting(true);
-    setTimeout(() => {
-      onDismiss(notification.id);
-    }, 300);
-  };
+  }, [notification.duration, handleDismiss]);
 
   const positionClasses = {
     "top-right": "top-4 right-4",

@@ -9,7 +9,7 @@ export type QuizQuestion = {
   type: QuestionType;
   question: string;
   options?: string[]; // For multiple choice
-  correctAnswer?: string | number; // For multiple choice (index) or true/false
+  correctAnswer?: string | number | boolean; // For multiple choice (index) or true/false
   correctAnswers?: string[]; // For multiple select
   points: number;
   explanation?: string;
