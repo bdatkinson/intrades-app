@@ -12,21 +12,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Vercel Preview Deploy (official)
-        id: vercel
+      - name: Deploy Preview with Vercel CLI
+        id: deploy
         if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
-        uses: vercel/actions/deploy@v3
-        with:
-          token: ${{ secrets.VERCEL_TOKEN }}
-          project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          team-id: ${{ secrets.VERCEL_ORG_ID }}
-          working-directory: ./web
-          prod: false
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        run: |
+          npm i -g vercel@latest
+          cd web
+          url=$(vercel deploy --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" --yes 2>&1 | tee /tmp/vercel.log | grep -Eo 'https://[^ ]+vercel\.app' | tail -n 1)
+          echo "preview_url=$url" >> $GITHUB_OUTPUT
 
       - name: Set preview URL output
         id: set-url
-        if: ${{ steps.vercel.outputs.deployment-url != '' }}
-        run: echo "preview_url=${{ steps.vercel.outputs.deployment-url }}" >> $GITHUB_OUTPUT
+        if: ${{ steps.deploy.outputs.preview_url != '' }}
+        run: echo "preview_url=${{ steps.deploy.outputs.preview_url }}" >> $GITHUB_OUTPUT
 
       - name: Setup Node
         if: ${{ steps.set-url.outputs.preview_url != '' }}
