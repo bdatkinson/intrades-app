@@ -1,17 +1,14 @@
 ﻿'use client'
 
 import Link from 'next/link'
-import { useMemo, Suspense } from 'react'
+import { Suspense } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { CHALLENGES, type Trade, type Difficulty } from '@/data/challenges'
+import { useChallenges } from '@/lib/api-hooks'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-type TradeFilter = Trade | 'All'
-const TRADES: Trade[] = ['Electrical', 'Plumbing', 'Carpentry', 'HVAC', 'Welding']
-
-type DifficultyFilter = Difficulty | 'All'
-const DIFFICULTY: Difficulty[] = ['Easy', 'Medium', 'Hard']
+const TRADES = ['Electrical', 'Plumbing', 'Carpentry', 'HVAC', 'Welding'] as const;
+const DIFFICULTY = ['Easy', 'Medium', 'Hard'] as const;
 
 export default function ChallengesPage() {
   return (
@@ -26,18 +23,17 @@ function ChallengesInner() {
   const pathname = usePathname()
   const search = useSearchParams()
 
-  const trade: TradeFilter = (search.get('trade') as Trade | null) || 'All'
-  const diff: DifficultyFilter = (search.get('difficulty') as Difficulty | null) || 'All'
+  const trade = search.get('trade') || undefined
+  const difficulty = search.get('difficulty') || undefined
 
-  const items = useMemo(() => {
-    return CHALLENGES
-      .filter((c) => (trade !== 'All' ? c.trade === trade : true))
-      .filter((c) => (diff !== 'All' ? c.difficulty === diff : true))
-  }, [trade, diff])
+  const { data: challenges = [], isLoading } = useChallenges({
+    trade: trade || undefined,
+    difficulty: difficulty || undefined,
+  })
 
   function setParam(key: string, value: string) {
     const sp = new URLSearchParams(search.toString())
-    if (value === 'All' || value === '') sp.delete(key)
+    if (value === '' || value === 'All') sp.delete(key)
     else sp.set(key, value)
     router.push(`${pathname}?${sp.toString()}`)
   }
@@ -57,7 +53,7 @@ function ChallengesInner() {
         <label className="text-sm text-foreground/80">
           Trade
           <select
-            value={trade === 'All' ? '' : trade}
+            value={trade || ''}
             onChange={(e) => setParam('trade', e.target.value)}
             className="ml-2 rounded-md border border-[var(--brand-border)] bg-transparent px-2 py-1 text-sm text-foreground"
           >
@@ -72,7 +68,7 @@ function ChallengesInner() {
         <label className="text-sm text-foreground/80">
           Difficulty
           <select
-            value={diff === 'All' ? '' : diff}
+            value={difficulty || ''}
             onChange={(e) => setParam('difficulty', e.target.value)}
             className="ml-2 rounded-md border border-[var(--brand-border)] bg-transparent px-2 py-1 text-sm text-foreground"
           >
@@ -89,20 +85,37 @@ function ChallengesInner() {
         </Button>
       </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((c) => (
-          <Card key={c.id}>
-            <CardHeader>
-              <CardTitle>{c.title}</CardTitle>
-              <span className="rounded-md border border-[var(--brand-border)] px-2 py-0.5 text-xs text-foreground/80">{c.trade} • {c.difficulty}</span>
-            </CardHeader>
-            <CardContent>
-              <p>{c.summary}</p>
-              <Link href={`/challenges/${c.id}`} className="mt-3 inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-black brand-gradient">View</Link>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="mt-6 flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
+            <p className="text-foreground/70">Loading challenges...</p>
+          </div>
+        </div>
+      ) : challenges.length === 0 ? (
+        <div className="mt-6 rounded-lg border border-[var(--brand-border)] p-8 text-center">
+          <p className="text-foreground/70">No challenges found. Try adjusting your filters.</p>
+        </div>
+      ) : (
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {challenges.map((c) => (
+            <Card key={c.id}>
+              <CardHeader>
+                <CardTitle>{c.title}</CardTitle>
+                <span className="rounded-md border border-[var(--brand-border)] px-2 py-0.5 text-xs text-foreground/80">
+                  {c.trade} • {c.difficulty} • +{c.xpReward} XP
+                </span>
+              </CardHeader>
+              <CardContent>
+                <p>{c.summary || c.description}</p>
+                <Link href={`/challenges/${c.id}`} className="mt-3 inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-black brand-gradient">
+                  View
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </main>
   )
 }

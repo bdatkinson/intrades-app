@@ -1,32 +1,65 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { vi } from "vitest";
+import { vi, beforeEach } from "vitest";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const push = vi.fn();
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push }),
   usePathname: () => "/challenges",
-  useSearchParams: () => ({ get: () => null, toString: () => "" }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+// Mock API
+vi.mock("@/lib/api", () => ({
+  api: {
+    getChallenges: vi.fn(() => Promise.resolve([])),
+  },
+  storage: {
+    tokens: null,
+  },
 }));
 
 import ChallengesPage from "./page";
 
 describe("ChallengesPage", () => {
+  let queryClient: QueryClient;
+
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+      },
+    });
+  });
+
   it("renders heading and filters", () => {
-    render(<ChallengesPage />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ChallengesPage />
+      </QueryClientProvider>
+    );
     expect(screen.getByRole("heading", { name: /challenges/i })).toBeInTheDocument();
     expect(screen.getByText(/trade/i)).toBeInTheDocument();
     expect(screen.getByText(/difficulty/i)).toBeInTheDocument();
   });
 
   it("updates URL on trade filter change", async () => {
-    render(<ChallengesPage />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ChallengesPage />
+      </QueryClientProvider>
+    );
     const select = screen.getAllByRole("combobox")[0];
     fireEvent.change(select, { target: { value: "Electrical" } });
     expect(push).toHaveBeenCalledWith("/challenges?trade=Electrical");
   });
 
   it("resets filters", () => {
-    render(<ChallengesPage />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ChallengesPage />
+      </QueryClientProvider>
+    );
     fireEvent.click(screen.getByRole("button", { name: /reset/i }));
     expect(push).toHaveBeenCalledWith("/challenges");
   });
