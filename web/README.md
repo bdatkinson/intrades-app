@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# InTrades Frontend
 
-## Getting Started
+Modern, gamified learning platform for skilled trades education.
 
-First, run the development server:
+## 🚀 Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Run tests
+npm test
+
+# Run E2E tests
+npm run e2e
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📁 Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+web/
+├── src/
+│   ├── app/              # Next.js app router pages
+│   ├── components/       # React components
+│   │   ├── instructor/   # Instructor-specific components
+│   │   └── __tests__/    # Component tests
+│   ├── lib/              # Utilities and helpers
+│   │   └── __tests__/    # Utility tests
+│   └── tests/            # Integration tests
+├── public/               # Static assets
+├── .github/              # CI/CD workflows
+└── next.config.js        # Next.js configuration
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎨 Features
 
-## Learn More
+### Student Features
+- ✅ Interactive dashboard with XP tracking
+- ✅ Challenge system with quizzes and submissions
+- ✅ Gamification (badges, tiers, streaks, leaderboard)
+- ✅ Business milestone tracking
+- ✅ Activity feed
+- ✅ Achievement notifications
 
-To learn more about Next.js, take a look at the following resources:
+### Instructor Features
+- ✅ Student roster and cohort management
+- ✅ Challenge creation and scheduling
+- ✅ Grading workflow with rubrics
+- ✅ Analytics dashboard
+- ✅ Report generation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Technical Features
+- ✅ Code splitting and lazy loading
+- ✅ PWA support with offline capability
+- ✅ Responsive design
+- ✅ Dark mode
+- ✅ Accessibility (WCAG 2.1 AA)
+- ✅ Performance optimized
+- ✅ TypeScript throughout
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧪 Testing
 
-## Deploy on Vercel
+```bash
+# Unit tests
+npm test
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Integration tests
+npm run test:integration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# E2E tests
+npm run e2e
+
+# Coverage
+npm run test:coverage
+```
+
+## 📦 Build & Deploy
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create `.env.local`:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
+
+### Next.js Config
+
+Optimizations are configured in `next.config.js`:
+- Code splitting
+- Image optimization
+- Bundle optimization
+- Security headers
+
+## 📱 PWA Features
+
+- Installable on mobile devices
+- Offline support
+- Service worker caching
+- App-like experience
+
+## ♿ Accessibility
+
+- WCAG 2.1 AA compliant
+- Keyboard navigation
+- Screen reader support
+- Focus management
+- ARIA labels
+
+## 🚀 Performance
+
+- Code splitting by route
+- Lazy loading of heavy components
+- Image optimization
+- Bundle size optimization
+- Performance monitoring
+
+## 📚 Documentation
+
+- [Frontend Development Plan](../docs/FRONTEND_DEVELOPMENT_PLAN.md)
+- [API Documentation](../docs/API_DOCUMENTATION.md)
+- [Deployment Guide](./DEPLOYMENT.md)
+
+## 🤝 Contributing
+
+1. Create feature branch
+2. Make changes
+3. Write/update tests
+4. Submit PR
+
+## 📄 License
+
+See LICENSE file
