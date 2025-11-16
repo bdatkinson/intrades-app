@@ -39,19 +39,18 @@ describe("ChallengesPage", () => {
       </QueryClientProvider>
     );
     expect(screen.getByRole("heading", { name: /challenges/i })).toBeInTheDocument();
-    expect(screen.getByText(/trade/i)).toBeInTheDocument();
     expect(screen.getByText(/difficulty/i)).toBeInTheDocument();
   });
 
-  it("updates URL on trade filter change", async () => {
+  it("updates URL on difficulty filter change", async () => {
     render(
       <QueryClientProvider client={queryClient}>
         <ChallengesPage />
       </QueryClientProvider>
     );
     const select = screen.getAllByRole("combobox")[0];
-    fireEvent.change(select, { target: { value: "Electrical" } });
-    expect(push).toHaveBeenCalledWith("/challenges?trade=Electrical");
+    fireEvent.change(select, { target: { value: "Medium" } });
+    expect(push).toHaveBeenCalledWith("/challenges?difficulty=Medium");
   });
 
   it("resets filters", () => {

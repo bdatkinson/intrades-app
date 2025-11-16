@@ -8,7 +8,6 @@ import { ChallengeProgressTracker } from '@/components/challenge-progress-tracke
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { SubmissionData } from '@/lib/api'
-import type { Trade } from '@/data/challenges'
 
 export default function ChallengeDetail({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -81,7 +80,6 @@ export default function ChallengeDetail({ params }: { params: { id: string } }) 
           id: Number(challenge.id),
           title: challenge.title,
           summary: challenge.summary || challenge.description,
-          trade: challenge.trade as Trade,
           difficulty: challenge.difficulty,
           submission: challenge.submissionType === 'upload' ? { type: 'upload', accept: challenge.submissionAccept } : undefined,
         }}
