@@ -1,5 +1,6 @@
-﻿export type Trade = 'Electrical' | 'Plumbing' | 'Carpentry' | 'HVAC' | 'Welding'
-export type Difficulty = 'Easy' | 'Medium' | 'Hard'
+﻿export type Difficulty = 'Easy' | 'Medium' | 'Hard'
+
+export type Category = 'Foundation' | 'Technical' | 'Marketing' | 'Operations' | 'Mastery'
 
 export type Submission =
   | { type: 'upload'; accept?: string }
@@ -8,16 +9,59 @@ export type Challenge = {
   id: number
   title: string
   summary: string
-  trade: Trade
   difficulty: Difficulty
+  category?: Category
   submission?: Submission
 }
 
+// Unified real-world milestone challenges (no trade distinctions)
 export const CHALLENGES: Challenge[] = [
-  { id: 1, title: 'Wire a 3-way switch', summary: 'Control one light from two switches using 14/3 cable.', trade: 'Electrical', difficulty: 'Medium' },
-  { id: 2, title: 'Solder a copper tee', summary: 'Clean, flux, and solder a watertight 1/2" copper tee.', trade: 'Plumbing', difficulty: 'Easy', submission: { type: 'upload', accept: 'image/*' } },
-  { id: 3, title: 'Frame a rough opening', summary: 'Frame a door opening with jack and king studs to spec.', trade: 'Carpentry', difficulty: 'Medium' },
-  { id: 4, title: 'Brazed HVAC joint', summary: 'Brazing copper tubing with nitrogen purge for clean joints.', trade: 'HVAC', difficulty: 'Hard', submission: { type: 'upload', accept: 'image/*,video/*' } },
-  { id: 5, title: 'Stick weld lap joint', summary: 'Weld a 3/16" lap joint with E6011, proper penetration.', trade: 'Welding', difficulty: 'Medium' },
-  { id: 6, title: 'GFCI outlet install', summary: 'Install and test a GFCI receptacle with line/load.', trade: 'Electrical', difficulty: 'Easy' },
+  {
+    id: 101,
+    title: 'Form your LLC',
+    summary: 'Register a legal business entity (LLC or equivalent) in your state.',
+    difficulty: 'Medium',
+    category: 'Foundation',
+    submission: { type: 'upload', accept: 'application/pdf,image/*' },
+  },
+  {
+    id: 102,
+    title: 'Register a domain',
+    summary: 'Choose and register a professional domain for your business.',
+    difficulty: 'Easy',
+    category: 'Marketing',
+    submission: { type: 'upload', accept: 'image/*,application/pdf' },
+  },
+  {
+    id: 103,
+    title: 'Launch a simple website',
+    summary: 'Publish a one-page site with services, contact, and brand basics.',
+    difficulty: 'Medium',
+    category: 'Marketing',
+    submission: { type: 'upload', accept: 'image/*,application/pdf' },
+  },
+  {
+    id: 104,
+    title: 'Obtain insurance quotes',
+    summary: 'Get at least two quotes for general liability (and workers’ comp if needed).',
+    difficulty: 'Easy',
+    category: 'Operations',
+    submission: { type: 'upload', accept: 'application/pdf,image/*' },
+  },
+  {
+    id: 105,
+    title: 'Estimate your first job',
+    summary: 'Prepare a professional estimate including scope, materials, and labor.',
+    difficulty: 'Medium',
+    category: 'Operations',
+    submission: { type: 'upload', accept: 'application/pdf,image/*' },
+  },
+  {
+    id: 106,
+    title: 'Create your first SOP',
+    summary: 'Document a repeatable process (e.g., site walkthrough or cleanup checklist).',
+    difficulty: 'Easy',
+    category: 'Mastery',
+    submission: { type: 'upload', accept: 'application/pdf' },
+  },
 ]

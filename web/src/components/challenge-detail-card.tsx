@@ -20,12 +20,12 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   Hard: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
 };
 
-const TRADE_ICONS: Record<string, string> = {
-  Electrical: "⚡",
-  Plumbing: "🔧",
-  Carpentry: "🪚",
-  HVAC: "❄️",
-  Welding: "🔥",
+const CATEGORY_ICONS: Record<string, string> = {
+  Foundation: "🏗️",
+  Technical: "🛠️",
+  Marketing: "📣",
+  Operations: "📋",
+  Mastery: "🏆",
 };
 
 export function ChallengeDetailCard({
@@ -47,7 +47,7 @@ export function ChallengeDetailCard({
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-4xl">{TRADE_ICONS[challenge.trade] || "📋"}</span>
+              <span className="text-4xl">{CATEGORY_ICONS[challenge.category || ""] || "📋"}</span>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                   {challenge.title}
@@ -58,9 +58,11 @@ export function ChallengeDetailCard({
                   }`}>
                     {challenge.difficulty}
                   </span>
-                  <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                    {challenge.trade}
-                  </span>
+                  {challenge.category && (
+                    <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                      {challenge.category}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

@@ -7,7 +7,6 @@ import { useChallenges } from '@/lib/api-hooks'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-const TRADES = ['Electrical', 'Plumbing', 'Carpentry', 'HVAC', 'Welding'] as const;
 const DIFFICULTY = ['Easy', 'Medium', 'Hard'] as const;
 
 export default function ChallengesPage() {
@@ -23,11 +22,9 @@ function ChallengesInner() {
   const pathname = usePathname()
   const search = useSearchParams()
 
-  const trade = search.get('trade') || undefined
   const difficulty = search.get('difficulty') || undefined
 
   const { data: challenges = [], isLoading } = useChallenges({
-    trade: trade || undefined,
     difficulty: difficulty || undefined,
   })
 
@@ -50,21 +47,6 @@ function ChallengesInner() {
 
       {/* Filters */}
       <div className="mt-6 grid gap-3 sm:flex sm:items-center">
-        <label className="text-sm text-foreground/80">
-          Trade
-          <select
-            value={trade || ''}
-            onChange={(e) => setParam('trade', e.target.value)}
-            className="ml-2 rounded-md border border-[var(--brand-border)] bg-transparent px-2 py-1 text-sm text-foreground"
-          >
-            <option value="" className="text-black">All</option>
-            {TRADES.map((t) => (
-              <option key={t} value={t} className="text-black">
-                {t}
-              </option>
-            ))}
-          </select>
-        </label>
         <label className="text-sm text-foreground/80">
           Difficulty
           <select
@@ -103,7 +85,7 @@ function ChallengesInner() {
               <CardHeader>
                 <CardTitle>{c.title}</CardTitle>
                 <span className="rounded-md border border-[var(--brand-border)] px-2 py-0.5 text-xs text-foreground/80">
-                  {c.trade} • {c.difficulty} • +{c.xpReward} XP
+                  {c.difficulty} • +{c.xpReward} XP
                 </span>
               </CardHeader>
               <CardContent>
